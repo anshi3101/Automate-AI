@@ -22,7 +22,7 @@ export const login = async(req,res) => {
                     email:decoded.email,
                     profilePicture:decoded.picture
                 },
-                $setONInsert:{
+                $setOnInsert:{
                     fireabaseUid:decoded.uid  
                 }
 
@@ -35,7 +35,7 @@ export const login = async(req,res) => {
 
         const token = jwt.sign({userId:user._id},process.env.JWT_SECRET,{expiresIn:"7d"})
 
-        res.cookies("token",token,{
+        res.cookie("token",token,{
             httpOnly:"true",
             secure:false,
             sameSite:"strict",

@@ -1,6 +1,7 @@
 import { cn } from "cn"
 import {FcGoogle} from "react-icons/fc"
 import { Button } from "@/components/ui/button"
+import { login } from "@/features/auth" // Ya aapka jo bhi auth.js ka folder path hai (jaise "@/api/auth" ya "../services/auth")
 import {
   Card,
   CardContent,
@@ -18,18 +19,21 @@ import {
 import { Input } from "@/components/ui/input"
 import { signInWithPopup } from "firebase/auth"
 import { auth,googleProvider } from "@/firebase"
+import { useDispatch } from "react-redux"
+import { setUserData } from "@/redux/userSlice"
 
 export function LoginForm({
   className,
   ...props
 }) {
-
+  const dispatch = useDispatch()
   const handleGoogleLogin = async ()=>{
     try{
       const result = await signInWithPopup(auth,googleProvider)
-      const token = result.user.getIdToken()
+      const token = await result.user.getIdToken()
       const data = await login(token)
-      console.log()
+      console.log(data)
+      dispatch(setUserData(data))
     } catch(error){
       console.log(error)
     }
@@ -54,9 +58,6 @@ export function LoginForm({
                  <FcGoogle/>
                   Login with Google
                 </Button>
-              </Field>
-              <Field>
-                <Button type="submit">Login</Button>
               </Field>
             </FieldGroup>
           </form>
